@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Products — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-glass">
+  <div class="container">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><i class="fa-solid fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="verify.html">Verify Product</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="contact.html">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center" id="navAuthArea"></div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-section" style="padding:3.5rem 0 2.5rem;">
+  <div class="blob blob-1"></div>
+  <div class="container position-relative">
+    <span class="hero-badge"><span class="dot pulse-dot"></span> Verified Product Catalog</span>
+    <h1 class="hero-title mt-3" style="font-size:2.4rem;">Browse Verified Skincare Products</h1>
+    <p class="hero-sub mt-2" style="max-width:640px;">Every product listed here is registered on the blockchain by its manufacturer or retail partner. Search by name, brand, ingredient, or skin type.</p>
+    <div class="topbar-search mt-4" style="max-width:560px;background:rgba(255,255,255,0.95);">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search products, brands, or ingredients...">
+    </div>
+  </div>
+</section>
+
+<section class="py-5" style="padding-top:2.5rem;padding-bottom:5rem;">
+  <div class="container">
+    <div class="row g-4">
+
+      <div class="col-lg-3">
+        <div class="filter-panel mb-4">
+          <h6>Category</h6>
+          <div id="categoryFilters"><div class="spinner-border spinner-border-sm text-royal"></div></div>
+        </div>
+        <div class="filter-panel mb-4">
+          <h6>Brand</h6>
+          <div id="brandFilters" style="max-height:280px;overflow-y:auto;"><div class="spinner-border spinner-border-sm text-royal"></div></div>
+        </div>
+        <div class="filter-panel">
+          <h6>Skin Type</h6>
+          <div id="skinTypeFilters"></div>
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div id="resultsCount" class="text-muted-soft fw-semibold">Loading products...</div>
+          <select class="form-select" id="sortSelect" style="max-width:220px;">
+            <option value="newest">Newest First</option>
+            <option value="most_scanned">Most Verified</option>
+            <option value="name_asc">Name (A–Z)</option>
+          </select>
+        </div>
+        <div class="row g-4" id="productsResultsGrid">
+          <div class="col-12 text-center py-5"><div class="spinner-border text-royal"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container text-center">
+    <a class="brand-logo text-white mb-3 d-inline-flex justify-content-center" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span> AuthenChain</a>
+    <div class="divider-glow my-4" style="background:rgba(255,255,255,0.1);"></div>
+    <div style="opacity:0.5;font-size:0.85rem;">&copy; 2026 AuthenChain. Final Year Project.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+const state = { search: "", brand: "", category: "", skin_type: "", sort: "newest" };
+const SKIN_TYPES = ["All Skin Types", "Dry Skin", "Oily Skin", "Combination Skin", "Sensitive Skin", "Acne-Prone Skin", "Mature Skin"];
+
+function applyUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  state.brand = params.get("brand") || "";
+  state.category = params.get("category") || "";
+  state.search = params.get("search") || "";
+  if (state.search) document.getElementById("searchInput").value = state.search;
+}
+
+function chip(label, active, onClick) {
+  const el = document.createElement("div");
+  el.className = "filter-chip" + (active ? " active" : "");
+  el.textContent = label;
+  el.addEventListener("click", onClick);
+  return el;
+}
+
+async function loadFilters() {
+  try {
+    const meta = await apiRequest("/products/meta/filters");
+    const catEl = document.getElementById("categoryFilters");
+    catEl.innerHTML = "";
+    catEl.appendChild(chip("All", state.category === "", () => { state.category = ""; refresh(true); }));
+    meta.categories.forEach((c) => catEl.appendChild(chip(c, state.category === c, () => { state.category = c; refresh(true); })));
+
+    const brandEl = document.getElementById("brandFilters");
+    brandEl.innerHTML = "";
+    brandEl.appendChild(chip("All", state.brand === "", () => { state.brand = ""; refresh(true); }));
+    meta.brands.forEach((b) => brandEl.appendChild(chip(b, state.brand === b, () => { state.brand = b; refresh(true); })));
+
+    const skinEl = document.getElementById("skinTypeFilters");
+    skinEl.innerHTML = "";
+    skinEl.appendChild(chip("All", state.skin_type === "", () => { state.skin_type = ""; refresh(true); }));
+    SKIN_TYPES.forEach((s) => skinEl.appendChild(chip(s, state.skin_type === s, () => { state.skin_type = s; refresh(true); })));
+  } catch (e) { showToast(e.message, "danger"); }
+}
+
+async function refresh(refilter = false) {
+  const grid = document.getElementById("productsResultsGrid");
+  const countEl = document.getElementById("resultsCount");
+  grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-royal"></div></div>';
+  try {
+    const params = new URLSearchParams();
+    if (state.search) params.set("search", state.search);
+    if (state.brand) params.set("brand", state.brand);
+    if (state.category) params.set("category", state.category);
+    if (state.skin_type) params.set("skin_type", state.skin_type);
+    if (state.sort) params.set("sort", state.sort);
+
+    const data = await apiRequest(`/products?${params.toString()}`);
+    countEl.textContent = `${data.count} product${data.count === 1 ? "" : "s"} found`;
+    grid.innerHTML = data.products.length
+      ? data.products.map(productCardHTML).join("")
+      : '<div class="col-12"><div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No products match your filters. Try broadening your search.</p></div></div>';
+    if (refilter) loadFilters();
+  } catch (e) {
+    grid.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>${e.message}</p></div></div>`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  applyUrlParams();
+  loadFilters();
+  refresh();
+
+  let debounceTimer;
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => { state.search = e.target.value; refresh(); }, 350);
+  });
+  document.getElementById("sortSelect").addEventListener("change", (e) => { state.sort = e.target.value; refresh(); });
+});
+</script>
+</body>
+</html>

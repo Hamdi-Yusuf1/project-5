@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-glass">
+  <div class="container">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><i class="fa-solid fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="verify.html">Verify Product</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="contact.html">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center" id="navAuthArea"></div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-section" style="padding:5rem 0 4rem;">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="container position-relative text-center">
+    <span class="hero-badge"><span class="dot pulse-dot"></span> Get In Touch</span>
+    <h1 class="hero-title mt-3">We'd Love to Hear From You</h1>
+    <p class="hero-sub mx-auto mt-3">Questions about the platform, partnership ideas, or feedback on the project — send us a message and we'll respond as soon as possible.</p>
+  </div>
+</section>
+
+<section class="py-5" style="padding-top:5rem;padding-bottom:5rem;">
+  <div class="container">
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-4">
+        <div class="d-flex flex-column gap-4">
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon"><i class="fa-solid fa-envelope"></i></div>
+            <h5>Email Us</h5>
+            <p class="text-muted-soft mb-0">support@authenchain.com</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon green"><i class="fa-solid fa-phone"></i></div>
+            <h5>Call Us</h5>
+            <p class="text-muted-soft mb-0">+254 700 123 456</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h5>Visit Us</h5>
+            <p class="text-muted-soft mb-0">Nairobi, Kenya</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="glass-card p-4 p-lg-5 reveal-on-scroll">
+          <h4 class="mb-4">Send a Message</h4>
+          <form id="contactForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="contactName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="contactEmail" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Subject</label>
+                <input type="text" class="form-control" id="contactSubject" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Message</label>
+                <textarea class="form-control" id="contactMessage" rows="5" required></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary-gradient btn-lg w-100"><i class="fa-solid fa-paper-plane me-2"></i>Send Message</button>
+              </div>
+            </div>
+          </form>
+          <div id="contactResult"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container text-center">
+    <a class="brand-logo text-white mb-3 d-inline-flex justify-content-center" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span> AuthenChain</a>
+    <div class="divider-glow my-4" style="background:rgba(255,255,255,0.1);"></div>
+    <div style="opacity:0.5;font-size:0.85rem;">&copy; 2026 AuthenChain. Final Year Project.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('contactResult').innerHTML =
+      '<div class="alert alert-success mt-3"><i class="fa-solid fa-circle-check me-2"></i>Thank you! Your message has been received. This is a demo form for the final year project — no email is actually sent.</div>';
+    this.reset();
+    showToast('Message sent successfully!', 'success');
+  });
+</script>
+</body>
+</html>

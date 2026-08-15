@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <aside class="dash-sidebar" id="dashSidebar">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a class="sidebar-link" href="manufacturer-dashboard.html"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+      <div class="sidebar-section-label">Account</div>
+      <a class="sidebar-link active" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 mb-3 px-1">
+        <div id="sidebarUserAvatar" style="width:38px;height:38px;border-radius:10px;background:var(--grad-green);display:flex;align-items:center;justify-content:center;font-weight:700;">U</div>
+        <div>
+          <div id="sidebarUserName" style="font-size:0.88rem;font-weight:700;">User</div>
+          <div id="sidebarUserRole" style="font-size:0.75rem;opacity:0.6;">Role</div>
+        </div>
+      </div>
+      <a href="#" class="sidebar-link logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="dash-main">
+    <header class="dash-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn sidebar-toggle-btn" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h5 class="mb-0">My Profile</h5>
+          <small class="text-muted-soft">Manage your account settings</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <div class="notif-bell" id="notifBell" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-bell fs-5 text-muted-soft"></i>
+            <span class="notif-dot" id="notifDot" style="display:none;"></span>
+          </div>
+          <div class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="width:320px;border-radius:16px;" id="notifList"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+      <div class="row g-4">
+
+        <div class="col-lg-4">
+          <div class="panel text-center">
+            <div class="position-relative d-inline-block mb-3">
+              <div id="profileAvatarText" style="width:96px;height:96px;border-radius:50%;background:var(--grad-primary);color:white;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:800;margin:0 auto;">U</div>
+              <img id="profileAvatarImg" class="d-none" style="width:96px;height:96px;border-radius:50%;object-fit:cover;">
+              <label for="profileImageInput" class="position-absolute" style="bottom:0;right:0;width:32px;height:32px;background:var(--soft-green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;box-shadow:var(--shadow-sm);">
+                <i class="fa-solid fa-camera" style="font-size:0.8rem;"></i>
+              </label>
+            </div>
+            <h5 id="sidebarUserNameEcho" class="mb-1"></h5>
+            <span class="badge-status badge-genuine" id="profileRoleBadge">Role</span>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="panel mb-4">
+            <div class="panel-title mb-3">Edit Profile</div>
+            <form id="profileForm">
+              <input type="file" id="profileImageInput" accept="image/*" class="d-none">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="profileName" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="profileEmail" disabled>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="profilePhone">
+                </div>
+                <div class="col-md-6" id="profileCompanyGroup">
+                  <label class="form-label">Company / Brand Name</label>
+                  <input type="text" class="form-control" id="profileCompany">
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary-gradient">Save Changes</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title mb-3">Change Password</div>
+            <form id="passwordForm">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label">Current Password</label>
+                  <input type="password" class="form-control" id="currentPassword" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">New Password</label>
+                  <input type="password" class="form-control" id="newPassword" minlength="6" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Confirm New Password</label>
+                  <input type="password" class="form-control" id="confirmNewPassword" minlength="6" required>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-outline-royal">Update Password</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/profile.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!Auth.isLoggedIn()) { window.location.href = 'login.html'; return; }
+    const user = Auth.getUser();
+    document.getElementById('sidebarUserNameEcho').textContent = user.full_name;
+    if (user.role !== 'manufacturer') document.getElementById('profileCompanyGroup').style.display = 'none';
+  });
+</script>
+</body>
+</html>

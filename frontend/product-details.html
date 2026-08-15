@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-glass">
+  <div class="container">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><i class="fa-solid fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="verify.html">Verify Product</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="contact.html">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center" id="navAuthArea"></div>
+    </div>
+  </div>
+</nav>
+
+<section class="py-5" style="padding-top:2.5rem;">
+  <div class="container" id="pdContent">
+    <div class="text-center py-5"><div class="spinner-border text-royal"></div></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container text-center">
+    <a class="brand-logo text-white mb-3 d-inline-flex justify-content-center" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span> AuthenChain</a>
+    <div class="divider-glow my-4" style="background:rgba(255,255,255,0.1);"></div>
+    <div style="opacity:0.5;font-size:0.85rem;">&copy; 2026 AuthenChain. Final Year Project.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+function statusBadgePublic(status) {
+  const map = { active: "badge-genuine", recalled: "badge-counterfeit", expired: "badge-suspicious" };
+  const label = { active: "Active", recalled: "Recalled", expired: "Expired Stock" };
+  return `<span class="badge-status ${map[status] || "badge-genuine"}">${label[status] || status}</span>`;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const content = document.getElementById("pdContent");
+  if (!id) { content.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-question"></i><p>No product selected.</p></div>'; return; }
+
+  try {
+    const [productRes, relatedRes] = await Promise.all([
+      apiRequest(`/products/${id}`),
+      apiRequest(`/products/${id}/related`),
+    ]);
+    const p = productRes.product;
+    const related = relatedRes.products || [];
+    const gallery = [p.image_path, ...(p.gallery_images || [])].filter(Boolean);
+    const user = Auth.getUser();
+    const isOwner = user && user.role === "manufacturer" && user.id === p.manufacturer_id;
+    const heartClass = p.is_favorited ? "fa-solid" : "fa-regular";
+    const heartColor = p.is_favorited ? "#ef4460" : "#7c86a3";
+
+    content.innerHTML = `
+      <div class="row g-5">
+        <div class="col-lg-5">
+          <div class="rounded-xl overflow-hidden mb-3" style="background:var(--gray-100);">
+            <img id="mainGalleryImage" src="/${gallery[0]}" class="img-fluid w-100" style="aspect-ratio:1/1;object-fit:cover;">
+          </div>
+          <div class="d-flex gap-2">
+            ${gallery.map((g, i) => `
+              <img src="/${g}" onclick="document.getElementById('mainGalleryImage').src='/${g}'"
+                   style="width:70px;height:70px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid ${i === 0 ? "var(--royal-blue)" : "transparent"};">`).join("")}
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <div class="text-royal fw-bold" style="font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;">${p.brand}</div>
+              <h1 style="font-size:2rem;">${p.product_name}</h1>
+            </div>
+            <button class="btn" onclick="toggleFavoriteFromCard(event, ${p.id}, this)" style="border:1px solid var(--gray-200);border-radius:50%;width:48px;height:48px;">
+              <i class="${heartClass} fa-heart" style="color:${heartColor};"></i>
+            </button>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+            ${statusBadgePublic(p.status)}
+            <span class="badge-status badge-genuine"><i class="fa-solid fa-link"></i> Blockchain Registered</span>
+            <span class="text-muted-soft"><i class="fa-solid fa-qrcode me-1"></i>${p.scan_count} verifications</span>
+          </div>
+
+          <div class="mb-3">
+            <div class="fs-3 fw-bold text-royal d-inline-block me-2">$${(p.price || 0).toFixed(2)}</div>
+            <span class="text-muted-soft" style="font-size:0.78rem;">estimated retail price — for reference only, not sold directly through AuthenChain</span>
+          </div>
+          <p class="text-muted-soft mb-4">${p.description || ""}</p>
+
+          <div class="row g-3 mb-4">
+            <div class="col-6"><small class="text-muted-soft">Batch Number</small><div class="fw-bold">${p.batch_number}</div></div>
+            <div class="col-6"><small class="text-muted-soft">Category</small><div class="fw-bold">${p.category}</div></div>
+            <div class="col-6"><small class="text-muted-soft">Skin Type</small><div class="fw-bold">${p.skin_type || "All Skin Types"}</div></div>
+            <div class="col-6"><small class="text-muted-soft">Country of Origin</small><div class="fw-bold">${p.country_of_origin || "—"}</div></div>
+            <div class="col-6"><small class="text-muted-soft">Manufacturing Date</small><div class="fw-bold">${fmtDatePublic(p.manufacturing_date)}</div></div>
+            <div class="col-6"><small class="text-muted-soft">Expiry Date</small><div class="fw-bold">${fmtDatePublic(p.expiry_date)}</div></div>
+          </div>
+
+          <div class="d-flex gap-3">
+            <a href="verify.html" class="btn btn-primary-gradient btn-lg flex-grow-1"><i class="fa-solid fa-qrcode me-2"></i>Verify This Product</a>
+            ${p.qr_code_path ? `<a href="/${p.qr_code_path}" download class="btn btn-outline-royal btn-lg"><i class="fa-solid fa-download"></i></a>` : ""}
+            ${isOwner ? `<a href="manufacturer-dashboard.html" class="btn btn-outline-royal btn-lg"><i class="fa-solid fa-pen"></i></a>` : ""}
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mt-2">
+        <div class="col-md-4">
+          <div class="panel-lite h-100">
+            <h6><i class="fa-solid fa-flask-vial me-2 text-royal"></i>Ingredients</h6>
+            <p class="text-muted-soft mb-0">${p.ingredients || "Not specified"}</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel-lite h-100">
+            <h6><i class="fa-solid fa-star me-2 text-royal"></i>Benefits</h6>
+            <p class="text-muted-soft mb-0">${p.benefits || "Not specified"}</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel-lite h-100">
+            <h6><i class="fa-solid fa-circle-info me-2 text-royal"></i>How to Use</h6>
+            <p class="text-muted-soft mb-0">${p.usage_instructions || "Not specified"}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-4 mt-4" style="background:rgba(245,166,35,0.06);border:1px dashed #f5a623;">
+        <h6 class="mb-2"><i class="fa-solid fa-triangle-exclamation me-2" style="color:#f5a623;"></i>Warnings &amp; Precautions</h6>
+        <p class="text-muted-soft mb-0">${p.warnings || WARNING_FALLBACK}</p>
+      </div>
+
+      ${related.length ? `
+      <div class="mt-5">
+        <h4 class="mb-4">Related Products</h4>
+        <div class="row g-4">${related.map(productCardHTML).join("")}</div>
+      </div>` : ""}
+    `;
+  } catch (err) {
+    content.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>${err.message}</p></div>`;
+  }
+});
+
+const WARNING_FALLBACK = "For external use only. Discontinue use if irritation occurs. Keep out of reach of children.";
+function fmtDatePublic(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+</script>
+</body>
+</html>

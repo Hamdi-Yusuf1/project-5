@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify a Product — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-glass">
+  <div class="container">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><i class="fa-solid fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="verify.html">Verify Product</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="contact.html">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center" id="navAuthArea"></div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero-section" style="padding:4rem 0 3rem;">
+  <div class="blob blob-1"></div>
+  <div class="container position-relative text-center">
+    <span class="hero-badge"><span class="dot pulse-dot"></span> AI + Blockchain Verification</span>
+    <h1 class="hero-title mt-3">Verify Your Skincare Product</h1>
+    <p class="hero-sub mx-auto mt-3">Scan the QR code, upload a photo, or use your camera — our simulated AI engine cross-checks it against the manufacturer's registry and blockchain ledger instantly.</p>
+  </div>
+</section>
+
+<section class="py-5" style="padding-top:3.5rem;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="glass-card p-2 p-md-4">
+
+          <!-- Tabs -->
+          <div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+            <button class="btn btn-outline-royal verify-tab-btn active" data-verify-tab="qr" onclick="switchVerifyTab('qr')"><i class="fa-solid fa-qrcode me-2"></i>Scan QR Code</button>
+            <button class="btn btn-outline-royal verify-tab-btn" data-verify-tab="image" onclick="switchVerifyTab('image')"><i class="fa-solid fa-image me-2"></i>Upload Photo</button>
+            <button class="btn btn-outline-royal verify-tab-btn" data-verify-tab="camera" onclick="switchVerifyTab('camera')"><i class="fa-solid fa-camera me-2"></i>Use Camera</button>
+          </div>
+
+          <!-- QR Tab -->
+          <div class="verify-tab-pane" id="tab-qr">
+            <form id="qrScanForm" class="text-center py-3">
+              <i class="fa-solid fa-qrcode" style="font-size:3.5rem;color:var(--royal-blue);"></i>
+              <p class="text-muted-soft mt-2 mb-4">Paste the code printed beneath the product's QR code, or the raw QR data if you have a separate scanner app.</p>
+              <div class="mx-auto" style="max-width:420px;">
+                <input type="text" class="form-control form-control-lg text-center mb-3" id="qrCodeInput" placeholder="e.g. AUTHENCHAIN-PG-VITC-1001-a1b2c3d4" required>
+                <button type="submit" class="btn btn-primary-gradient btn-lg w-100 verify-action-btn"><i class="fa-solid fa-magnifying-glass me-2"></i>Verify Now</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Image Tab -->
+          <div class="verify-tab-pane d-none" id="tab-image">
+            <form id="imageScanForm" class="text-center py-3">
+              <p class="text-muted-soft mb-3">Upload a clear photo of the product packaging along with its batch number for the most accurate AI comparison.</p>
+              <div class="mx-auto" style="max-width:420px;">
+                <input type="text" class="form-control mb-3" id="imageBatchInput" placeholder="Batch Number (e.g. PG-VITC-1001)" required>
+                <label class="d-block mb-3" style="cursor:pointer;">
+                  <div class="empty-state" style="border:2px dashed var(--gray-300);border-radius:16px;padding:2rem;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p class="mb-0">Click to choose a product photo</p>
+                  </div>
+                  <input type="file" id="imageFileInput" accept="image/*" class="d-none" required>
+                </label>
+                <img id="imagePreview" class="img-fluid rounded-xl mb-3 d-none" style="max-height:220px;object-fit:cover;">
+                <button type="submit" class="btn btn-primary-gradient btn-lg w-100 verify-action-btn"><i class="fa-solid fa-brain me-2"></i>Analyze with AI</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Camera Tab -->
+          <div class="verify-tab-pane d-none" id="tab-camera">
+            <div class="text-center py-3">
+              <p class="text-muted-soft mb-3">Capture a live photo using your device camera for instant AI verification.</p>
+              <div class="mx-auto" style="max-width:420px;">
+                <input type="text" class="form-control mb-3" id="cameraBatchInput" placeholder="Batch Number (e.g. PG-VITC-1001)">
+                <div class="rounded-xl overflow-hidden mb-3" style="background:var(--gray-100);min-height:220px;display:flex;align-items:center;justify-content:center;">
+                  <video id="cameraVideo" class="d-none w-100" autoplay playsinline></video>
+                  <i id="cameraPlaceholderIcon" class="fa-solid fa-video" style="font-size:2.5rem;color:var(--gray-300);"></i>
+                </div>
+                <canvas id="cameraCanvas" class="d-none"></canvas>
+                <img id="cameraPreview" class="img-fluid rounded-xl mb-3 d-none" style="max-height:220px;object-fit:cover;">
+                <button id="cameraStartBtn" type="button" class="btn btn-outline-royal btn-lg w-100 mb-2"><i class="fa-solid fa-camera me-2"></i>Start Camera</button>
+                <button id="cameraCaptureBtn" type="button" class="btn btn-primary-gradient btn-lg w-100 d-none verify-action-btn"><i class="fa-solid fa-circle-dot me-2"></i>Capture &amp; Verify</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5 d-none" id="verifyLoading">
+      <div class="spinner-border text-royal" style="width:3.5rem;height:3.5rem;" role="status"></div>
+      <p class="mt-3 fw-semibold">Running AI image analysis &amp; blockchain lookup...</p>
+    </div>
+
+    <!-- Results -->
+    <div class="d-none mt-5" id="verifyResults">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+          <div class="text-center mb-4">
+            <div id="resultBadgeIcon" class="verify-badge-xl genuine"></div>
+            <h2 class="mt-3" id="resultTitle">Result</h2>
+            <div id="resultRisk"></div>
+          </div>
+
+          <div class="warning-banner d-none mb-4" id="counterfeitWarning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+              <h5 class="text-white mb-1">⚠ WARNING</h5>
+              <p class="mb-0">This product may be counterfeit. Please stop using it and report it to the manufacturer or relevant authority immediately.</p>
+            </div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-4 text-center">
+              <div class="panel">
+                <div class="gauge-wrap"><canvas id="matchGauge"></canvas>
+                  <div class="gauge-value"><div class="num" id="matchGaugeValue">—</div><div class="lbl" id="matchGaugeLabel">Match Score</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="panel">
+                <div class="gauge-wrap"><canvas id="similarityGauge"></canvas>
+                  <div class="gauge-value"><div class="num" id="similarityGaugeValue">—</div><div class="lbl" id="similarityGaugeLabel">Similarity</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="panel">
+                <div class="gauge-wrap"><canvas id="confidenceGauge"></canvas>
+                  <div class="gauge-value"><div class="num" id="confidenceGaugeValue">—</div><div class="lbl" id="confidenceGaugeLabel">Confidence</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 justify-content-center mb-4">
+            <div id="qrStatusBadge"></div>
+            <div id="blockchainStatusBadge"></div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <div class="panel h-100">
+                <div class="panel-title mb-3"><i class="fa-solid fa-image me-2 text-royal"></i>Registered Reference Image</div>
+                <img id="registeredProductImage" class="img-fluid rounded-xl w-100" style="max-height:260px;object-fit:cover;" src="https://placehold.co/400x400/eef1f8/7c86a3?text=No+Image">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel h-100">
+                <div class="panel-title mb-2"><i class="fa-solid fa-brain me-2 text-royal"></i>AI Analysis Explanation</div>
+                <p class="text-muted-soft mb-0" id="aiExplanation">—</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title mb-3"><i class="fa-solid fa-flask-vial me-2 text-royal"></i>Product Details</div>
+            <div id="productDetailsCard"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container text-center">
+    <a class="brand-logo text-white mb-3 d-inline-flex justify-content-center" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span> AuthenChain</a>
+    <div class="divider-glow my-4" style="background:rgba(255,255,255,0.1);"></div>
+    <div style="opacity:0.5;font-size:0.85rem;">&copy; 2026 AuthenChain. Final Year Project.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/verification.js"></script>
+</body>
+</html>

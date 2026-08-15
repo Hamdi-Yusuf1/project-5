@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <aside class="dash-sidebar" id="dashSidebar">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a class="sidebar-link" href="admin-dashboard.html"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+      <a class="sidebar-link" href="admin-dashboard.html#products"><i class="fa-solid fa-box-open"></i>Products</a>
+      <a class="sidebar-link" href="admin-dashboard.html#users"><i class="fa-solid fa-users"></i>Users</a>
+      <div class="sidebar-section-label">Insights</div>
+      <a class="sidebar-link" href="analytics.html"><i class="fa-solid fa-chart-line"></i>Analytics</a>
+      <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-file-lines"></i>Reports</a>
+      <div class="sidebar-section-label">Account</div>
+      <a class="sidebar-link" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 mb-3 px-1">
+        <div id="sidebarUserAvatar" style="width:38px;height:38px;border-radius:10px;background:var(--grad-green);display:flex;align-items:center;justify-content:center;font-weight:700;">A</div>
+        <div>
+          <div id="sidebarUserName" style="font-size:0.88rem;font-weight:700;">Admin</div>
+          <div id="sidebarUserRole" style="font-size:0.75rem;opacity:0.6;">Admin</div>
+        </div>
+      </div>
+      <a href="#" class="sidebar-link logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="dash-main">
+    <header class="dash-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn sidebar-toggle-btn" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h5 class="mb-0">Admin Dashboard</h5>
+          <small class="text-muted-soft">Platform-wide overview &amp; controls</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <div class="notif-bell" id="notifBell" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-bell fs-5 text-muted-soft"></i>
+            <span class="notif-dot" id="notifDot" style="display:none;"></span>
+          </div>
+          <div class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="width:320px;border-radius:16px;" id="notifList"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+
+      <div class="row g-3 mb-4" id="adminStatsGrid">
+        <div class="col-12 text-center py-4"><div class="spinner-border text-royal"></div></div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+          <div class="panel h-100">
+            <div class="panel-title">Monthly Product Registrations</div>
+            <div class="panel-sub mb-3">New products registered over the past year</div>
+            <canvas id="monthlyRegChart" height="130"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="panel h-100">
+            <div class="panel-title">Risk Distribution</div>
+            <div class="panel-sub mb-3">Across all verification scans</div>
+            <canvas id="riskDistChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="panel-title mb-0"><i class="fa-solid fa-link me-2 text-royal"></i>Blockchain Ledger</div>
+              <span class="badge-status badge-genuine" id="chainIntegrityBadge">Checking...</span>
+            </div>
+            <div class="table-responsive" style="max-height:340px;overflow-y:auto;">
+              <table class="table-modern w-100">
+                <thead><tr><th>#</th><th>Product</th><th>Status</th><th>Hash</th></tr></thead>
+                <tbody id="blockchainLedgerBody"><tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="panel-title mb-3"><i class="fa-solid fa-brain me-2 text-royal"></i>AI Verification Logs</div>
+            <div class="table-responsive" style="max-height:340px;overflow-y:auto;">
+              <table class="table-modern w-100">
+                <thead><tr><th>Product</th><th>Decision</th><th>Match</th><th>Confidence</th></tr></thead>
+                <tbody id="aiLogsBody"><tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mb-4">
+        <div class="panel-title mb-3">Recent Verification Activity</div>
+        <div class="table-responsive">
+          <table class="table-modern w-100">
+            <thead><tr><th>Product</th><th>Method</th><th>Result</th><th>Risk</th><th>Date</th></tr></thead>
+            <tbody id="recentActivityBody"><tr><td colspan="5" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel mb-4" id="products">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div class="panel-title mb-0">Manage Products</div>
+          <div class="topbar-search" style="min-width:260px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="adminProductSearch" placeholder="Search any product on the platform...">
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table-modern w-100">
+            <thead><tr><th>Product</th><th>Brand</th><th>Manufacturer</th><th>Status</th><th>Scans</th><th>Action</th></tr></thead>
+            <tbody id="adminProductsBody"><tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="users">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div class="panel-title mb-0">Platform Users</div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-royal active" data-user-role-filter="">All</button>
+            <button class="btn btn-sm btn-outline-royal" data-user-role-filter="manufacturer">Manufacturers</button>
+            <button class="btn btn-sm btn-outline-royal" data-user-role-filter="consumer">Users</button>
+            <button class="btn btn-sm btn-outline-royal" data-user-role-filter="admin">Admins</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table-modern w-100">
+            <thead><tr><th></th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="usersTableBody"><tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => { Auth.requireRole(['admin']); });
+</script>
+</body>
+</html>

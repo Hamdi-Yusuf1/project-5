@@ -1,0 +1,32 @@
+/* ==========================================================
+   Responsive Overrides
+   ========================================================== */
+
+@media (max-width: 1199px) {
+  .hero-title { font-size: 2.6rem; }
+}
+
+@media (max-width: 991px) {
+  .hero-section { padding: 5.5rem 0 4rem; text-align: center; }
+  .hero-sub { margin: 0 auto; }
+  .stat-pill { padding: 1rem 0.5rem; }
+  .auth-side { display: none; }
+  .dash-content { padding: 1.2rem; }
+  .topbar-search { min-width: 160px; }
+}
+
+@media (max-width: 767px) {
+  .section-title { font-size: 1.6rem; }
+  .feature-card { padding: 1.4rem; }
+  .stat-value { font-size: 1.3rem; }
+  .dash-topbar { padding: 0.8rem 1rem; }
+  .topbar-search { display: none; }
+  .verify-badge-xl { width: 100px; height: 100px; font-size: 2.4rem; }
+  .warning-banner { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 575px) {
+  .hero-title { font-size: 2rem; }
+  .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+  .auth-card { border-radius: var(--radius-md); }
+}

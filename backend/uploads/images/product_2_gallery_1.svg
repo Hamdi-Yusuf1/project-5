@@ -1,0 +1,29 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g123bg" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(45)">
+      <stop offset="0%" stop-color="#2952E3" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#0B3D91" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="g123pack" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2952E3"/>
+      <stop offset="100%" stop-color="#0B3D91"/>
+    </linearGradient>
+    <filter id="g123shadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0B3D91" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="500" height="500" fill="#FFFFFF"/>
+  <rect width="500" height="500" fill="url(#g123bg)"/>
+  <circle cx="250.0" cy="210.0" r="150" fill="#2952E3" opacity="0.06"/>
+
+  <g transform="translate(250.0,230.0)" filter="url(#g123shadow)">
+    <path d="M -18,-2 h36 v10 a26,20 0 0 1 -36,0 z" fill="url(#g123pack)" transform="scale(3.6)"/>
+    <path d="M -18,-2 h36 v10 a26,20 0 0 1 -36,0 z" fill="#FFFFFF" opacity="0.14" transform="scale(3.6) translate(0,-2)"/>
+    <rect x="-46" y="-8" width="92" height="34" rx="4" fill="#FFFFFF" opacity="0.92"/>
+    <text x="0" y="12" text-anchor="middle" font-family="Sora, Arial, sans-serif" font-size="13" font-weight="700" fill="#0B3D91">PUREGLOW</text>
+  </g>
+
+  <text x="250.0" y="390.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#1A2238"><tspan x="0" dy="0">HydraBoost Daily</tspan><tspan x="0" dy="24">Moisturizer #1</tspan></text>
+  <text x="250.0" y="450.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#7C86A3">Moisturizer</text>
+</svg>

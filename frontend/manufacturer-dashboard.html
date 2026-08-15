@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manufacturer Dashboard — AuthenChain</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<link href="css/animations.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    <a class="brand-logo" href="index.html"><span class="icon-badge"><i class="fa-solid fa-shield-halved"></i></span>AuthenChain</a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a class="sidebar-link" href="manufacturer-dashboard.html"><i class="fa-solid fa-gauge-high"></i>Overview</a>
+      <a class="sidebar-link" href="manufacturer-dashboard.html#products"><i class="fa-solid fa-box-open"></i>My Products</a>
+      <div class="sidebar-section-label">Insights</div>
+      <a class="sidebar-link" href="analytics.html"><i class="fa-solid fa-chart-line"></i>Analytics</a>
+      <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-file-lines"></i>Reports</a>
+      <div class="sidebar-section-label">Account</div>
+      <a class="sidebar-link" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 mb-3 px-1">
+        <div id="sidebarUserAvatar" style="width:38px;height:38px;border-radius:10px;background:var(--grad-green);display:flex;align-items:center;justify-content:center;font-weight:700;">M</div>
+        <div>
+          <div id="sidebarUserName" style="font-size:0.88rem;font-weight:700;">Manufacturer</div>
+          <div id="sidebarUserRole" style="font-size:0.75rem;opacity:0.6;">Manufacturer</div>
+        </div>
+      </div>
+      <a href="#" class="sidebar-link logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+    <header class="dash-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn sidebar-toggle-btn" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h5 class="mb-0">Manufacturer Dashboard</h5>
+          <small class="text-muted-soft">Manage your registered products &amp; QR codes</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <div class="notif-bell" id="notifBell" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-bell fs-5 text-muted-soft"></i>
+            <span class="notif-dot" id="notifDot" style="display:none;"></span>
+          </div>
+          <div class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="width:320px;border-radius:16px;" id="notifList"></div>
+        </div>
+        <button class="btn btn-primary-gradient btn-sm" onclick="openAddProduct()"><i class="fa-solid fa-plus me-1"></i>Register Product</button>
+      </div>
+    </header>
+
+    <div class="dash-content">
+
+      <div class="row g-3 mb-4" id="mfrStatsGrid">
+        <div class="col-12 text-center py-4"><div class="spinner-border text-royal"></div></div>
+      </div>
+
+      <div class="panel mb-4">
+        <div class="panel-title mb-3">Recently Registered Products</div>
+        <div class="table-responsive">
+          <table class="table-modern w-100">
+            <thead><tr><th>Product</th><th>Brand</th><th>Status</th><th>Scans</th><th>Registered</th></tr></thead>
+            <tbody id="recentProductsBody"><tr><td colspan="5" class="text-center py-4"><div class="spinner-border text-royal"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="products" class="panel">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+          <div class="panel-title mb-0">All My Products</div>
+          <div class="topbar-search" style="min-width:260px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="productSearch" placeholder="Search by name, brand, batch...">
+          </div>
+        </div>
+        <div class="row g-4" id="productsGrid">
+          <div class="col-12 text-center py-4"><div class="spinner-border text-royal"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="border-radius:20px;border:none;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="productModalTitle">Register New Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="pName" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Brand</label>
+              <input type="text" class="form-control" id="pBrand" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Batch Number</label>
+              <input type="text" class="form-control" id="pBatch" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="pCategory">
+                <option>Serum</option><option>Moisturizer</option><option>Cleanser</option>
+                <option>Night Cream</option><option>Eye Care</option><option>Sunscreen</option><option>Skincare</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Ingredients</label>
+              <input type="text" class="form-control" id="pIngredients" placeholder="e.g. Vitamin C, Hyaluronic Acid, Vitamin E">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="pDescription" rows="2"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Skin Type</label>
+              <select class="form-select" id="pSkinType">
+                <option>All Skin Types</option><option>Dry Skin</option><option>Oily Skin</option>
+                <option>Combination Skin</option><option>Sensitive Skin</option><option>Acne-Prone Skin</option><option>Mature Skin</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Country of Origin</label>
+              <input type="text" class="form-control" id="pCountry" placeholder="e.g. Kenya">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Price (USD)</label>
+              <input type="number" step="0.01" min="0" class="form-control" id="pPrice" placeholder="e.g. 24.99">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Benefits</label>
+              <input type="text" class="form-control" id="pBenefits" placeholder="e.g. Brightens skin tone; Boosts hydration">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Usage Instructions</label>
+              <textarea class="form-control" id="pUsage" rows="2" placeholder="How should consumers use this product?"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Warnings</label>
+              <textarea class="form-control" id="pWarnings" rows="2" placeholder="Any precautions or warnings"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Manufacturing Date</label>
+              <input type="date" class="form-control" id="pMfgDate">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Expiry Date</label>
+              <input type="date" class="form-control" id="pExpDate">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="pStatus">
+                <option value="active">Active</option>
+                <option value="recalled">Recalled</option>
+                <option value="expired">Expired</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Product Image</label>
+              <input type="file" class="form-control" id="pImage" accept="image/*">
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary-gradient btn-lg w-100 mt-2">Save Product <i class="fa-solid fa-check ms-2"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => { Auth.requireRole(['manufacturer']); });
+</script>
+</body>
+</html>
